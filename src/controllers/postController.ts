@@ -1,10 +1,14 @@
 import db from '../config/db'
 import { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 
 async function getPost(request:Request, response:Response) {
     const { id } = request.params
 
-    const post = await db.user.findFirst({
+    const post = await db.post.findFirst({
+        select:{
+            tags: true
+        },
         where: {
             id: Number(id)
         }
@@ -14,14 +18,17 @@ async function getPost(request:Request, response:Response) {
 }
 
 async function createPost(request:Request, response:Response) {
-    const { title, content, published, authorId } = request.body
+    const { title, content, published, authorId, tags } = request.body
+    
+    // var json = [tags] as Prisma.JsonArray
 
     const post = await db.post.create({
         data: {
             title: title,
             content: content,
             published: published,
-            authorId: authorId
+            authorId: authorId,
+            // tags: json.toString
         }
     })
 
