@@ -1,18 +1,6 @@
 import db from '../config/db'
 import { Request, Response } from 'express';
 
-async function getUser(request:Request, response:Response) {
-    const { id } = request.params
-
-    const user = await db.user.findFirst({
-        where: {
-            id: Number(id)
-        }
-    })
-
-    return response.status(200).json(user ? user : "Usuario não localizado!")
-}
-
 async function createUser(request:Request, response:Response) {
     const { email, name } = request.body
 
@@ -56,7 +44,6 @@ async function deleteUser(request:Request, response:Response) {
 }
 
 export default {
-    getUser,
     createUser,
     updateUser,
     deleteUser

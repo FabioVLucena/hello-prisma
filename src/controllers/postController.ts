@@ -1,6 +1,7 @@
 import db from '../config/db'
 import { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
+import { Interface } from 'readline';
 
 async function getPost(request:Request, response:Response) {
     const { id } = request.params
@@ -19,8 +20,6 @@ async function getPost(request:Request, response:Response) {
 
 async function createPost(request:Request, response:Response) {
     const { title, content, published, authorId, tags } = request.body
-    
-    // var json = [tags] as Prisma.JsonArray
 
     const post = await db.post.create({
         data: {
@@ -28,7 +27,9 @@ async function createPost(request:Request, response:Response) {
             content: content,
             published: published,
             authorId: authorId,
-            // tags: json.toString
+            tags: {
+                connect: tags ? tags.map((tag: any) => ({ id: Number(tag)})) : [],
+            }
         }
     })
 
@@ -67,10 +68,13 @@ async function deletePost(request:Request, response:Response) {
 
 async function selectManyPostByUser(request:Request, response:Response) {
     const { id } = request.body
-
+    
     const posts = await db.post.findMany({
         where: {
             authorId: Number(id)
+        },
+        include: {
+            tags: true
         }
     })
 

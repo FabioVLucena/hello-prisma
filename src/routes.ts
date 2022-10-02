@@ -6,7 +6,6 @@ import tagController from './controllers/tagController';
 
 const routes = Router();
 
-routes.get('/user/:id', userController.getUser);
 routes.post('/user', userController.createUser);
 routes.put('/user/:id', userController.updateUser);
 routes.delete('/user/:id', userController.deleteUser);
